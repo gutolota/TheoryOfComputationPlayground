@@ -75,10 +75,12 @@ export default function TuringMachineSimulator({ transitions, acceptState = 'q3'
 
   useEffect(() => {
     let timer;
-    if (isRunning && status !== 'Accepted' && status !== 'Rejected') {
-      timer = setTimeout(() => { step(); }, 500);
-    } else {
-      setIsRunning(false);
+    if (isRunning) {
+        if (status !== 'Accepted' && status !== 'Rejected') {
+            timer = setTimeout(() => { step(); }, 500);
+        } else {
+            setIsRunning(false);
+        }
     }
     return () => clearTimeout(timer);
   }, [isRunning, status, step]);

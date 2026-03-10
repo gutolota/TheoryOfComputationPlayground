@@ -14,11 +14,6 @@ export default function UniversalTuringMachine({ programRules, initialData }) {
   const [isRunning, setIsRunning] = useState(false);
   const tapeRef = useRef(null);
 
-  useEffect(() => {
-    setIsCompiled(false);
-    resetSimulation();
-  }, [programRules, initialData]);
-
   const codeTape = programRules.flatMap(r => [r.fromS, r.read, r.toS, r.write, r.move]);
   const separatorPos = codeTape.length;
   const dataOffset = separatorPos + 1;
@@ -38,6 +33,11 @@ export default function UniversalTuringMachine({ programRules, initialData }) {
     setActiveRuleIndex(null);
     setIsRunning(false);
   }, [dataOffset, initialData]);
+
+  useEffect(() => {
+    setIsCompiled(false);
+    resetSimulation();
+  }, [programRules, initialData, resetSimulation]);
 
   const compileToTape = () => {
     setIsCompiled(true);
