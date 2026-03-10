@@ -17,7 +17,7 @@ export default function CantorDiagonalization({ matrixSize = 8 }) {
 
   useEffect(() => {
     generateMatrix();
-  }, [generateMatrix]);
+  }, [matrixSize, generateMatrix]);
 
   const handleDiagonalClick = (index) => {
     setToggledBits((prev) => {
