@@ -105,26 +105,26 @@ export default function TuringMachineSimulator({ transitions, acceptState = 'q3'
 
   const getStatusColor = () => {
     switch (status) {
-      case 'Accepted': return 'text-green-400 bg-green-900/30 border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.15)]';
-      case 'Rejected': return 'text-red-400 bg-red-900/30 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.15)]';
-      case 'Running': return 'text-blue-400 bg-blue-900/30 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.15)]';
-      default: return 'text-gray-400 bg-[#020617] border-slate-800';
+      case 'Accepted': return 'text-green-700 bg-green-50 border-green-200';
+      case 'Rejected': return 'text-red-700 bg-red-50 border-red-200';
+      case 'Running': return 'text-purple-700 bg-purple-50 border-purple-200';
+      default: return 'text-slate-500 bg-white border-slate-200';
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pt-4">
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pt-4 pb-12">
       <div className="text-center space-y-3 mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">Simulador de Máquina de Turing</h1>
-        <p className="text-slate-400 max-w-2xl mx-auto text-base">
-          Processamento passo a passo da cadeia de entrada com base nas regras ativas do painel de configuração.
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">Simulador de Máquina de Turing</h1>
+        <p className="text-slate-500 max-w-2xl mx-auto text-base">
+          Processamento passo a passo da cadeia de entrada com base nas regras de transição.
         </p>
       </div>
 
-      <div className="bg-[#0f172a] rounded-xl p-6 border border-slate-800 shadow-lg">
+      <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
         <div className="flex flex-col md:flex-row gap-4 items-end">
           <div className="flex-1 w-full space-y-2">
-            <label className="text-sm font-medium text-slate-400">Cadeia de Entrada:</label>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Cadeia de Entrada</label>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -132,16 +132,16 @@ export default function TuringMachineSimulator({ transitions, acceptState = 'q3'
                 onChange={(e) => {
                   const val = e.target.value;
                   setInputString(val);
-                  if (onInputChange) onInputChange(val); // Sincroniza e salva no Local Storage
+                  if (onInputChange) onInputChange(val);
                 }}
-                className="w-full bg-[#020617] border border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-lg transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded px-4 py-2.5 focus:outline-none focus:border-purple-400 font-mono text-lg transition-all text-slate-800"
                 placeholder="Ex: 1111"
                 disabled={isRunning}
               />
               <button
                 onClick={handleLoad}
                 disabled={isRunning}
-                className="px-6 py-3 bg-[#1e293b] hover:bg-slate-700 border border-slate-600 rounded-lg transition-colors font-medium whitespace-nowrap disabled:opacity-50"
+                className="px-6 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 rounded transition-colors font-medium whitespace-nowrap text-slate-700 text-sm disabled:opacity-50"
               >
                 Carregar
               </button>
@@ -151,7 +151,11 @@ export default function TuringMachineSimulator({ transitions, acceptState = 'q3'
           <div className="flex gap-2 w-full md:w-auto">
             <button
               onClick={togglePlay}
-              className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors font-medium shadow-[0_0_15px_rgba(37,99,235,0.2)]"
+              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded transition-all font-bold text-sm shadow-sm ${
+                isRunning 
+                ? 'bg-slate-100 text-slate-700 border border-slate-300' 
+                : 'bg-purple-600 hover:bg-purple-700 text-white border border-purple-700'
+              }`}
             >
               {isRunning ? <Pause size={18} /> : <Play size={18} />}
               {isRunning ? 'Pausar' : 'Iniciar'}
@@ -159,13 +163,13 @@ export default function TuringMachineSimulator({ transitions, acceptState = 'q3'
             <button
               onClick={handleStep}
               disabled={isRunning || status === 'Accepted' || status === 'Rejected'}
-              className="flex items-center justify-center gap-2 px-5 py-3 bg-[#1e293b] hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors font-medium disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 rounded transition-colors font-bold text-sm text-slate-700 disabled:opacity-50 shadow-sm"
             >
               <StepForward size={18} /> Passo
             </button>
             <button
               onClick={() => initMachine(inputString)}
-              className="flex items-center justify-center gap-2 px-5 py-3 bg-[#020617] hover:bg-slate-800 border border-slate-800 rounded-lg transition-colors font-medium"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 rounded transition-colors font-medium text-slate-500 shadow-sm"
             >
               <RotateCcw size={18} />
             </button>
@@ -174,56 +178,61 @@ export default function TuringMachineSimulator({ transitions, acceptState = 'q3'
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-[#0f172a] rounded-xl p-6 border border-slate-800 shadow-lg space-y-4">
-          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Monitoramento de Estado</h3>
+        <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm space-y-4">
+          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Monitoramento de Estado</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-[#020617] p-4 rounded-lg border border-slate-800">
-              <p className="text-xs text-slate-500 mb-1">Estado Atual</p>
-              <p className="text-2xl font-mono text-blue-400 font-bold">{currentState}</p>
+            <div className="bg-slate-50 p-4 rounded border border-slate-100">
+              <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Estado Atual</p>
+              <p className="text-2xl font-mono text-purple-600 font-bold">{currentState}</p>
             </div>
-            <div className="bg-[#020617] p-4 rounded-lg border border-slate-800 overflow-hidden">
-              <p className="text-xs text-slate-500 mb-1">Última Transição</p>
-              <p className="text-sm font-mono text-purple-400 truncate mt-1">{lastRule}</p>
+            <div className="bg-slate-50 p-4 rounded border border-slate-100 overflow-hidden">
+              <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Última Transição</p>
+              <p className="text-sm font-mono text-slate-600 truncate mt-1">{lastRule}</p>
             </div>
           </div>
         </div>
 
-        <div className={`rounded-xl p-6 border flex flex-col justify-center items-center text-center transition-all duration-300 ${getStatusColor()}`}>
-          {status === 'Idle' && <p className="text-lg font-medium">Aguardando início...</p>}
-          {status === 'Running' && <p className="text-lg font-medium flex items-center gap-2 animate-pulse"><Play size={20} /> Em processamento...</p>}
+        <div className={`rounded-lg p-6 border flex flex-col justify-center items-center text-center transition-all duration-300 shadow-sm ${getStatusColor()}`}>
+          {status === 'Idle' && <p className="text-lg font-bold uppercase tracking-widest opacity-60">Aguardando...</p>}
+          {status === 'Running' && (
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-purple-600 rounded-full animate-ping"></div>
+              <p className="text-lg font-bold uppercase tracking-widest">Processando</p>
+            </div>
+          )}
           {status === 'Accepted' && (
             <>
               <CheckCircle2 size={40} className="mb-2" />
               <h2 className="text-2xl font-bold uppercase tracking-widest">Aceito</h2>
-              <p className="text-sm opacity-80 mt-1">Estado final de aceitação alcançado.</p>
+              <p className="text-xs font-medium opacity-80 mt-1">Parada em estado de aceitação.</p>
             </>
           )}
           {status === 'Rejected' && (
             <>
               <AlertCircle size={40} className="mb-2" />
               <h2 className="text-2xl font-bold uppercase tracking-widest">Rejeitado</h2>
-              <p className="text-sm opacity-80 mt-1">Transição indefinida ou travamento.</p>
+              <p className="text-xs font-medium opacity-80 mt-1">Cadeia não aceita pela máquina.</p>
             </>
           )}
         </div>
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider ml-1">Fita da Máquina</h3>
-        <div className="bg-[#0f172a] rounded-xl p-8 border border-slate-800 shadow-lg relative">
+        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Fita da Máquina</h3>
+        <div className="bg-white rounded-lg p-10 border border-slate-200 shadow-sm relative overflow-hidden">
           <div className="absolute left-0 right-0 top-3 flex justify-center pointer-events-none z-10">
-            <div className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[14px] border-l-transparent border-r-transparent border-t-blue-500 shadow-blue-500/50"></div>
+            <div className="w-0 h-0 border-l-[8px] border-r-[8px] border-t-[12px] border-l-transparent border-r-transparent border-t-purple-600"></div>
           </div>
 
-          <div ref={tapeRef} className="flex items-center gap-2 overflow-x-hidden pt-4 pb-2">
+          <div ref={tapeRef} className="flex items-center gap-2 overflow-x-auto py-6 px-4 no-scrollbar scroll-smooth">
             {tape.map((symbol, index) => {
               const isActive = index === headPos;
               return (
                 <div
                   key={`${index}-${symbol}`}
                   className={`
-                    relative flex-shrink-0 w-16 h-20 flex items-center justify-center text-3xl font-mono font-bold rounded-md border-2 transition-all duration-300
-                    ${isActive ? 'bg-blue-900/40 border-blue-500 text-blue-300 shadow-[0_0_20px_rgba(59,130,246,0.4)] scale-110 z-10' : 'bg-[#020617] border-slate-800 text-slate-500 opacity-80'}
+                    relative flex-shrink-0 w-16 h-20 flex items-center justify-center text-3xl font-mono font-bold rounded border transition-all duration-500
+                    ${isActive ? 'bg-purple-50 border-purple-500 text-purple-700 scale-110 z-10 shadow-sm' : 'bg-white border-slate-100 text-slate-300 opacity-60'}
                   `}
                 >
                   {symbol}
@@ -231,8 +240,8 @@ export default function TuringMachineSimulator({ transitions, acceptState = 'q3'
               );
             })}
           </div>
-          <div className="text-center mt-6">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-medium rounded-full border border-blue-500/20">
+          <div className="text-center mt-8">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 text-slate-400 text-[10px] font-bold uppercase tracking-widest rounded border border-slate-100">
               Cabeçote de Leitura/Escrita
             </span>
           </div>

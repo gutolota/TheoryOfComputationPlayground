@@ -1,8 +1,19 @@
-import React from "react";
+import React from 'react';
+
 export default function NavButton({ active, onClick, icon, label }) {
   return (
-    <button onClick={onClick} className={`flex items-center gap-2 px-4 py-2.5 rounded-md transition-colors text-sm font-medium whitespace-nowrap ${active ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}>
-      {icon} {label}
+    <button
+      onClick={onClick}
+      className={`
+        flex items-center gap-2 px-4 py-2 rounded transition-all font-medium text-sm whitespace-nowrap
+        ${active 
+          ? 'bg-slate-100 text-purple-600 border border-slate-200' 
+          : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+        }
+      `}
+    >
+      {icon}
+      <span>{label}</span>
     </button>
   );
 }

@@ -38,7 +38,7 @@ export default function TransitionEdge({
         style={{ 
           ...style, 
           strokeWidth: 2, 
-          stroke: selected ? '#facc15' : style.stroke || '#475569' 
+          stroke: selected ? '#7c3aed' : style.stroke || '#cbd5e1' 
         }} 
       />
       <EdgeLabelRenderer>
@@ -54,9 +54,9 @@ export default function TransitionEdge({
             value={data.label}
             onChange={onLabelChange}
             className={`
-              w-12 h-7 bg-[#020617] border border-slate-700 rounded text-center text-xs font-mono font-bold transition-all
-              ${selected ? 'border-yellow-500 text-yellow-400' : 'text-slate-400'}
-              focus:outline-none focus:ring-1 focus:ring-yellow-500
+              w-12 h-7 bg-white border border-slate-200 rounded text-center text-xs font-mono font-bold transition-all shadow-sm
+              ${selected ? 'border-purple-400 text-purple-600' : 'text-slate-500 hover:border-slate-300'}
+              focus:outline-none focus:ring-1 focus:ring-purple-400
             `}
             placeholder="0,1"
           />

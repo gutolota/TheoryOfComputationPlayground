@@ -88,27 +88,26 @@ export default function AutomataSimulator({
 
   const getStatusColor = () => {
     switch (status) {
-      case 'Accepted': return 'text-green-400 bg-green-900/30 border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.15)]';
-      case 'Rejected': return 'text-red-400 bg-red-900/30 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.15)]';
-      case 'Running': return 'text-blue-400 bg-blue-900/30 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.15)]';
-      default: return 'text-gray-400 bg-[#020617] border-slate-800';
+      case 'Accepted': return 'text-green-700 bg-green-50 border-green-200';
+      case 'Rejected': return 'text-red-700 bg-red-50 border-red-200';
+      case 'Running': return 'text-purple-700 bg-purple-50 border-purple-200';
+      default: return 'text-slate-500 bg-white border-slate-200';
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pt-4">
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pt-4 pb-12">
       <div className="text-center space-y-3 mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">Simulador de Autômatos ({type})</h1>
-        <p className="text-slate-400 max-w-2xl mx-auto text-base">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">Simulador de Autômatos ({type})</h1>
+        <p className="text-slate-500 max-w-2xl mx-auto text-base">
           Acompanhe o processamento da cadeia de entrada pelos estados do seu autômato.
         </p>
       </div>
 
-      {/* Controles e Entrada */}
-      <div className="bg-[#0f172a] rounded-xl p-6 border border-slate-800 shadow-lg">
+      <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
         <div className="flex flex-col md:flex-row gap-4 items-end">
           <div className="flex-1 w-full space-y-2">
-            <label className="text-sm font-medium text-slate-400">Cadeia de Entrada:</label>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Cadeia de Entrada</label>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -118,14 +117,14 @@ export default function AutomataSimulator({
                   setInputString(val);
                   if (onInputChange) onInputChange(val);
                 }}
-                className="w-full bg-[#020617] border border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-lg transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded px-4 py-2.5 focus:outline-none focus:border-purple-400 font-mono text-lg transition-all text-slate-800"
                 placeholder="Ex: 0101"
                 disabled={isRunning}
               />
               <button
                 onClick={() => initSimulator(inputString)}
                 disabled={isRunning}
-                className="px-6 py-3 bg-[#1e293b] hover:bg-slate-700 border border-slate-600 rounded-lg transition-colors font-medium whitespace-nowrap disabled:opacity-50"
+                className="px-6 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 rounded transition-colors font-medium whitespace-nowrap text-slate-700 text-sm disabled:opacity-50"
               >
                 Resetar
               </button>
@@ -135,7 +134,11 @@ export default function AutomataSimulator({
           <div className="flex gap-2 w-full md:w-auto">
             <button
               onClick={togglePlay}
-              className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors font-medium shadow-[0_0_15px_rgba(37,99,235,0.2)]"
+              className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded transition-all font-bold text-sm shadow-sm ${
+                isRunning 
+                ? 'bg-slate-100 text-slate-700 border border-slate-300' 
+                : 'bg-purple-600 hover:bg-purple-700 text-white border border-purple-700'
+              }`}
             >
               {isRunning ? <Pause size={18} /> : <Play size={18} />}
               {isRunning ? 'Pausar' : 'Iniciar'}
@@ -143,7 +146,7 @@ export default function AutomataSimulator({
             <button
               onClick={handleStep}
               disabled={isRunning || status === 'Accepted' || status === 'Rejected'}
-              className="flex items-center justify-center gap-2 px-5 py-3 bg-[#1e293b] hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors font-medium disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 rounded transition-colors font-bold text-sm text-slate-700 disabled:opacity-50 shadow-sm"
             >
               <StepForward size={18} /> Passo
             </button>
@@ -151,75 +154,76 @@ export default function AutomataSimulator({
         </div>
       </div>
 
-      {/* Status e Estados Ativos */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-[#0f172a] rounded-xl p-6 border border-slate-800 shadow-lg space-y-4">
-          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Estados Ativos</h3>
+        <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm space-y-4">
+          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Estados Ativos</h3>
           <div className="flex flex-wrap gap-2 min-h-[60px] content-start">
             {Array.from(currentStates).map(state => (
               <div 
                 key={state}
-                className={`px-4 py-2 rounded-lg font-mono font-bold text-lg border-2 transition-all duration-300 ${
+                className={`px-4 py-1.5 rounded font-mono font-bold text-sm border-2 transition-all duration-300 ${
                   acceptStates.includes(state) 
-                  ? 'bg-green-900/20 border-green-500 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.2)]'
-                  : 'bg-blue-900/20 border-blue-500 text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)]'
+                  ? 'bg-green-50 border-green-200 text-green-700'
+                  : 'bg-slate-50 border-slate-200 text-slate-700'
                 }`}
               >
                 {state}
               </div>
             ))}
-            {currentStates.size === 0 && <p className="text-slate-600 italic">Nenhum estado ativo (Travado)</p>}
+            {currentStates.size === 0 && <p className="text-slate-400 italic text-sm">Nenhum estado ativo (Travado)</p>}
           </div>
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
             <Info size={14} />
-            <span>Estados em <span className="text-green-500 font-bold">verde</span> são estados de aceitação.</span>
+            <span>Verde indica aceitação.</span>
           </div>
         </div>
 
-        <div className={`rounded-xl p-6 border flex flex-col justify-center items-center text-center transition-all duration-300 ${getStatusColor()}`}>
-          {status === 'Idle' && <p className="text-lg font-medium">Aguardando início...</p>}
+        <div className={`rounded-lg p-6 border flex flex-col justify-center items-center text-center transition-all duration-300 shadow-sm ${getStatusColor()}`}>
+          {status === 'Idle' && <p className="text-lg font-bold uppercase tracking-widest opacity-60">Aguardando...</p>}
           {status === 'Running' && (
             <div className="space-y-2">
-              <p className="text-lg font-medium flex items-center gap-2 animate-pulse"><Play size={20} /> Processando...</p>
-              <p className="text-sm opacity-70">Lendo: {inputString[currentIndex + 1] || 'Fim'}</p>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-purple-600 rounded-full animate-ping"></div>
+                <p className="text-lg font-bold uppercase tracking-widest">Processando</p>
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Lendo: {inputString[currentIndex + 1] || 'Fim'}</p>
             </div>
           )}
           {status === 'Accepted' && (
             <>
               <CheckCircle2 size={40} className="mb-2" />
               <h2 className="text-2xl font-bold uppercase tracking-widest">Aceito</h2>
-              <p className="text-sm opacity-80 mt-1">Cadeia pertence à linguagem do autômato.</p>
+              <p className="text-xs font-medium opacity-80 mt-1">Cadeia pertence à linguagem.</p>
             </>
           )}
           {status === 'Rejected' && (
             <>
               <AlertCircle size={40} className="mb-2" />
               <h2 className="text-2xl font-bold uppercase tracking-widest">Rejeitado</h2>
-              <p className="text-sm opacity-80 mt-1">Cadeia não aceita ou autômato travou.</p>
+              <p className="text-xs font-medium opacity-80 mt-1">Cadeia não aceita.</p>
             </>
           )}
         </div>
       </div>
 
-      {/* Visualização da Cadeia */}
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider ml-1">Cadeia de Processamento</h3>
-        <div className="bg-[#0f172a] rounded-xl p-6 border border-slate-800 shadow-lg overflow-x-auto">
+        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Cadeia de Processamento</h3>
+        <div className="bg-white rounded-lg p-8 border border-slate-200 shadow-sm overflow-x-auto">
           <div className="flex justify-center gap-1">
             {inputString.split('').map((char, idx) => (
               <div 
                 key={idx}
                 className={`
-                  w-10 h-14 flex items-center justify-center text-2xl font-mono font-bold rounded-md border-2 transition-all duration-300
-                  ${idx === currentIndex ? 'bg-blue-600 border-blue-400 text-white scale-110 z-10' : 
-                    idx < currentIndex ? 'bg-slate-800 border-slate-700 text-slate-400 opacity-50' : 
-                    'bg-[#020617] border-slate-800 text-slate-500'}
+                  w-10 h-14 flex items-center justify-center text-2xl font-mono font-bold rounded border transition-all duration-300
+                  ${idx === currentIndex ? 'bg-purple-600 border-purple-700 text-white scale-110 z-10 shadow-md' : 
+                    idx < currentIndex ? 'bg-slate-50 border-slate-100 text-slate-300 opacity-50' : 
+                    'bg-white border-slate-200 text-slate-700'}
                 `}
               >
                 {char}
               </div>
             ))}
-            {inputString.length === 0 && <p className="text-slate-600 font-mono italic">Cadeia Vazia (ε)</p>}
+            {inputString.length === 0 && <p className="text-slate-400 font-mono italic">Cadeia Vazia (ε)</p>}
           </div>
         </div>
       </div>
