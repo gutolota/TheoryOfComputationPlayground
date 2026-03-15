@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Settings, Cpu, Grid, Type, Check, AlertCircle, Plus, Trash2, SlidersHorizontal, BookOpen, Share2, MousePointer2, List } from 'lucide-react';
+import { Settings, Cpu, Grid, Type, Check, AlertCircle, Plus, Trash2, SlidersHorizontal, BookOpen, Share2, MousePointer2, List, Code, Download, Upload } from 'lucide-react';
 import TuringMachineSimulator from './components/TuringMachineSimulator';
 import CantorDiagonalization from './components/CantorDiagonalization';
 import UniversalTuringMachine from './components/UniversalTuringMachine';
@@ -15,6 +15,8 @@ export default function TheoryOfComputationHub() {
   const [activeTab, setActiveTab] = useLocalStorage('toc-active-tab', 'turing');
   const [showConfig, setShowConfig] = useState(false);
   const [editorMode, setEditorMode] = useLocalStorage('toc-auto-editor-mode', 'visual');
+  const [showJsonPanel, setShowJsonPanel] = useState(false);
+  const [jsonInput, setJsonInput] = useState('');
 
   // Estados Ativos
   const [tmRules, setTmRules] = useLocalStorage('toc-tm-rules', TM_EXAMPLES.parity.rules);
@@ -66,6 +68,7 @@ export default function TheoryOfComputationHub() {
       setEditingAutoInput(autoInput);
 
       setError('');
+      setShowJsonPanel(false);
     }
   }, [showConfig, tmRules, tmInput, tmAccept, utmRules, utmInitialData, cantorSize, autoType, autoInitial, autoAccept, autoTransitions, autoInput]);
 
@@ -103,6 +106,43 @@ export default function TheoryOfComputationHub() {
     } catch (err) {
       setError(err.message);
     }
+  };
+
+  const handleLoadJson = () => {
+    try {
+      const data = JSON.parse(jsonInput);
+      if (activeTab === 'turing') {
+        if (data.rules) setEditingTmRules(data.rules);
+        if (data.input) setEditingTmInput(data.input);
+        if (data.accept) setEditingTmAccept(data.accept);
+      } else if (activeTab === 'utm') {
+        if (data.rules) setEditingUtmRules(data.rules);
+        if (data.data) setEditingUtmData(Array.isArray(data.data) ? data.data.join(', ') : data.data);
+      } else if (activeTab === 'automata') {
+        if (data.type) setEditingAutoType(data.type);
+        if (data.initialState) setEditingAutoInitial(data.initialState);
+        if (data.acceptStates) setEditingAutoAccept(Array.isArray(data.acceptStates) ? data.acceptStates.join(', ') : data.acceptStates);
+        if (data.transitions) setEditingAutoTransitions(data.transitions);
+        if (data.input) setEditingAutoInput(data.input);
+      }
+      setShowJsonPanel(false);
+      setError('');
+    } catch (err) {
+      setError("Erro no JSON: " + err.message);
+    }
+  };
+
+  const handleExportJson = () => {
+    let obj = {};
+    if (activeTab === 'turing') {
+      obj = { rules: editingTmRules, input: editingTmInput, accept: editingTmAccept };
+    } else if (activeTab === 'utm') {
+      obj = { rules: editingUtmRules, data: editingUtmData.split(',').map(s => s.trim()) };
+    } else if (activeTab === 'automata') {
+      obj = { type: editingAutoType, initialState: editingAutoInitial, acceptStates: editingAutoAccept.split(',').map(s => s.trim()), transitions: editingAutoTransitions, input: editingAutoInput };
+    }
+    setJsonInput(JSON.stringify(obj, null, 2));
+    setShowJsonPanel(true);
   };
 
   const loadTmExample = (key) => {
@@ -169,7 +209,7 @@ export default function TheoryOfComputationHub() {
       {/* Painel de Configuração */}
       {showConfig && (
         <div className="border-b border-slate-200 bg-slate-50 p-6 shadow-inner relative z-40">
-          <div className="max-w-5xl mx-auto space-y-6 animate-in slide-in-from-top-4 duration-300">
+          <div className="max-w-5xl mx-auto space-y-6 animate-fade-in-up">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
               <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <SlidersHorizontal size={20} className="text-purple-600" /> 
@@ -180,14 +220,46 @@ export default function TheoryOfComputationHub() {
                   'Diagonalização'
                 }
               </h2>
-              <button onClick={handleApplyConfig} className="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded font-bold transition-all shadow-sm">
-                <Check size={18} /> Aplicar Alterações
-              </button>
+              <div className="flex gap-2">
+                <button 
+                  onClick={handleExportJson}
+                  className="flex items-center justify-center gap-2 bg-white border border-slate-300 text-slate-600 hover:text-slate-900 px-4 py-2 rounded font-bold text-sm transition-all shadow-sm"
+                >
+                  <Code size={16} /> JSON
+                </button>
+                <button onClick={handleApplyConfig} className="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded font-bold text-sm transition-all shadow-sm">
+                  <Check size={18} /> Aplicar Alterações
+                </button>
+              </div>
             </div>
             
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded flex items-center gap-2 font-medium text-sm">
                 <AlertCircle size={18} /> {error}
+              </div>
+            )}
+
+            {/* Painel JSON Laboratory */}
+            {showJsonPanel && (
+              <div className="bg-white rounded border border-slate-200 p-4 shadow-sm space-y-3 animate-in fade-in zoom-in-95 duration-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-slate-500 font-bold uppercase tracking-widest text-[10px]">
+                    <Code size={14} /> Laboratório JSON
+                  </div>
+                  <button onClick={() => setShowJsonPanel(false)} className="text-slate-400 hover:text-slate-600"><Trash2 size={14} /></button>
+                </div>
+                <textarea 
+                  value={jsonInput}
+                  onChange={(e) => setJsonInput(e.target.value)}
+                  placeholder='Cole seu JSON aqui... {"rules": [...]}'
+                  className="w-full h-40 bg-slate-50 border border-slate-200 rounded p-3 font-mono text-xs text-slate-700 focus:border-purple-400 outline-none"
+                />
+                <button 
+                  onClick={handleLoadJson}
+                  className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-2 rounded font-bold text-xs uppercase tracking-widest hover:bg-slate-800 transition-all"
+                >
+                  <Upload size={14} /> Carregar no Editor
+                </button>
               </div>
             )}
 
@@ -384,7 +456,7 @@ export default function TheoryOfComputationHub() {
         {activeTab === 'turing' && <TuringMachineSimulator transitions={convertTmArrayToObject(tmRules)} acceptState={tmAccept} initialState="q0" initialInput={tmInput} onInputChange={setTmInput} />}
         {activeTab === 'utm' && <UniversalTuringMachine programRules={utmRules} initialData={utmInitialData} />}
         {activeTab === 'automata' && (
-          <div className="space-y-8 animate-in fade-in duration-500">
+          <div className="space-y-8 animate-fade-in">
             {editorMode === 'visual' && <AutomataCanvas onSync={handleVisualSync} />}
             <AutomataSimulator type={autoType} transitions={autoTransitions} initialState={autoInitial} acceptStates={autoAccept} initialInput={autoInput} onInputChange={setAutoInput} />
           </div>

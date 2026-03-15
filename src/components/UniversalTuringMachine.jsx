@@ -164,7 +164,7 @@ export default function UniversalTuringMachine({ programRules, initialData }) {
               <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[10px] border-l-transparent border-r-transparent border-t-purple-600"></div>
             </div>
 
-            <div ref={tapeRef} className="flex items-center gap-1.5 overflow-x-auto py-4 px-4 no-scrollbar scroll-smooth">
+            <div ref={tapeRef} className="flex items-center gap-1.5 overflow-x-auto py-4 px-12 no-scrollbar scroll-smooth">
               {tape.map((symbol, index) => {
                 const isActive = index === headPos;
                 return (

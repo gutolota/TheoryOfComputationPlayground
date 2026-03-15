@@ -224,7 +224,7 @@ export default function TuringMachineSimulator({ transitions, acceptState = 'q3'
             <div className="w-0 h-0 border-l-[8px] border-r-[8px] border-t-[12px] border-l-transparent border-r-transparent border-t-purple-600"></div>
           </div>
 
-          <div ref={tapeRef} className="flex items-center gap-2 overflow-x-auto py-6 px-4 no-scrollbar scroll-smooth">
+          <div ref={tapeRef} className="flex items-center gap-2 overflow-x-auto py-6 px-12 no-scrollbar scroll-smooth">
             {tape.map((symbol, index) => {
               const isActive = index === headPos;
               return (
