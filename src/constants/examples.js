@@ -73,3 +73,48 @@ export const UTM_EXAMPLES = {
     ]
   }
 };
+
+export const AUTOMATA_EXAMPLES = {
+  dfa_ends_01: {
+    name: "DFA: Termina com '01'",
+    type: 'DFA',
+    input: "1101",
+    initialState: 'q0',
+    acceptStates: ['q2'],
+    transitions: [
+      { from: 'q0', symbol: '0', to: 'q1' },
+      { from: 'q0', symbol: '1', to: 'q0' },
+      { from: 'q1', symbol: '0', to: 'q1' },
+      { from: 'q1', symbol: '1', to: 'q2' },
+      { from: 'q2', symbol: '0', to: 'q1' },
+      { from: 'q2', symbol: '1', to: 'q0' },
+    ]
+  },
+  nfa_ends_abb: {
+    name: "NFA: Termina com 'abb'",
+    type: 'NFA',
+    input: "ababb",
+    initialState: 'q0',
+    acceptStates: ['q3'],
+    transitions: [
+      { from: 'q0', symbol: 'a', to: 'q0,q1' },
+      { from: 'q0', symbol: 'b', to: 'q0' },
+      { from: 'q1', symbol: 'b', to: 'q2' },
+      { from: 'q2', symbol: 'b', to: 'q3' },
+    ]
+  },
+  nfa_epsilon: {
+    name: "NFA: (0|1)*00 épsilon",
+    type: 'NFA',
+    input: "100",
+    initialState: 'q0',
+    acceptStates: ['q2'],
+    transitions: [
+      { from: 'q0', symbol: '0', to: 'q0' },
+      { from: 'q0', symbol: '1', to: 'q0' },
+      { from: 'q0', symbol: 'ε', to: 'q1' },
+      { from: 'q1', symbol: '0', to: 'q1' },
+      { from: 'q1', symbol: '0', to: 'q2' },
+    ]
+  }
+};
