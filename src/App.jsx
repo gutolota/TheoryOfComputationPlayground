@@ -464,8 +464,11 @@ export default function TheoryOfComputationHub() {
         {activeTab === 'cantor' && <CantorDiagonalization matrixSize={cantorSize} />}
       </main>
 
-      <footer className="max-w-7xl mx-auto p-8 text-center border-t border-slate-100 text-slate-400 text-[10px] uppercase tracking-[0.2em]">
-        Theory of Computation Visualizer &bull; Modular Research Environment
+      <footer className="max-w-7xl mx-auto p-12 text-center border-t border-slate-100 text-slate-400 text-[10px] uppercase tracking-[0.2em] space-y-2">
+        <p>Theory of Computation Visualizer &bull; Modular Research Environment</p>
+        <p className="normal-case tracking-normal text-xs">
+          Desenvolvido por <a href="https://www.linkedin.com/in/gustavo-tamiosso/" target="_blank" rel="noopener noreferrer" className="text-purple-600 font-bold hover:underline">Gustavo Lopes Tamiosso</a>
+        </p>
       </footer>
     </div>
   );
