@@ -5,6 +5,7 @@ import CantorDiagonalization from './components/CantorDiagonalization';
 import UniversalTuringMachine from './components/UniversalTuringMachine';
 import AutomataSimulator from './components/AutomataSimulator';
 import AutomataCanvas from './components/VisualAutomataEditor/AutomataCanvas';
+import SymbolPickerInput from './components/SymbolPickerInput';
 import NavButton from './components/NavButton';
 import useLocalStorage from './hooks/useLocalStorage';
 import { TM_EXAMPLES, UTM_EXAMPLES, AUTOMATA_EXAMPLES } from './constants/examples';
@@ -269,8 +270,15 @@ export default function TheoryOfComputationHub() {
                         {editingAutoTransitions.map((rule, idx) => (
                           <tr key={idx} className="hover:bg-slate-900/30">
                             <td className="py-2 pr-2"><input type="text" value={rule.from} onChange={(e) => {const n=[...editingAutoTransitions]; n[idx].from=e.target.value; setEditingAutoTransitions(n);}} className="w-full bg-[#0f172a] border border-slate-700 rounded p-1.5 text-slate-200 outline-none" /></td>
-                            <td className="py-2 pr-2"><input type="text" value={rule.symbol} onChange={(e) => {const n=[...editingAutoTransitions]; n[idx].symbol=e.target.value; setEditingAutoTransitions(n);}} className="w-24 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-blue-400 font-bold text-center outline-none" /></td>
+                            <td className="py-2 pr-2">
+                              <SymbolPickerInput 
+                                value={rule.symbol} 
+                                onChange={(val) => {const n=[...editingAutoTransitions]; n[idx].symbol=val; setEditingAutoTransitions(n);}} 
+                                className="w-24 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-blue-400 font-bold text-center outline-none" 
+                              />
+                            </td>
                             <td className="py-2 pr-2"><input type="text" value={rule.to} onChange={(e) => {const n=[...editingAutoTransitions]; n[idx].to=e.target.value; setEditingAutoTransitions(n);}} className="w-full bg-[#0f172a] border border-slate-700 rounded p-1.5 text-slate-200 outline-none" placeholder="Para NFA use vírgula: q1,q2" /></td>
+
                             <td className="py-2 text-center"><button onClick={() => setEditingAutoTransitions(editingAutoTransitions.filter((_, i) => i !== idx))} className="p-1.5 text-slate-500 hover:text-red-400 rounded"><Trash2 size={16} /></button></td>
                           </tr>
                         ))}
@@ -312,9 +320,21 @@ export default function TheoryOfComputationHub() {
                       {editingTmRules.map((rule, idx) => (
                         <tr key={idx} className="hover:bg-slate-900/30">
                           <td className="py-2 pr-2"><input type="text" value={rule.currentState} onChange={(e) => {const n=[...editingTmRules]; n[idx].currentState=e.target.value; setEditingTmRules(n);}} className="w-full bg-[#0f172a] border border-slate-700 rounded p-1.5 text-slate-200 focus:ring-1 focus:ring-blue-500 outline-none" /></td>
-                          <td className="py-2 pr-2"><input type="text" value={rule.readSymbol} onChange={(e) => {const n=[...editingTmRules]; n[idx].readSymbol=e.target.value; setEditingTmRules(n);}} className="w-16 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-blue-400 font-bold text-center outline-none" /></td>
+                          <td className="py-2 pr-2">
+                            <SymbolPickerInput 
+                              value={rule.readSymbol} 
+                              onChange={(val) => {const n=[...editingTmRules]; n[idx].readSymbol=val; setEditingTmRules(n);}} 
+                              className="w-16 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-blue-400 font-bold text-center outline-none" 
+                            />
+                          </td>
                           <td className="py-2 pr-2"><input type="text" value={rule.nextState} onChange={(e) => {const n=[...editingTmRules]; n[idx].nextState=e.target.value; setEditingTmRules(n);}} className="w-full bg-[#0f172a] border border-slate-700 rounded p-1.5 text-slate-200 outline-none" /></td>
-                          <td className="py-2 pr-2"><input type="text" value={rule.writeSymbol} onChange={(e) => {const n=[...editingTmRules]; n[idx].writeSymbol=e.target.value; setEditingTmRules(n);}} className="w-16 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-purple-400 font-bold text-center outline-none" /></td>
+                          <td className="py-2 pr-2">
+                            <SymbolPickerInput 
+                              value={rule.writeSymbol} 
+                              onChange={(val) => {const n=[...editingTmRules]; n[idx].writeSymbol=val; setEditingTmRules(n);}} 
+                              className="w-16 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-purple-400 font-bold text-center outline-none" 
+                            />
+                          </td>
                           <td className="py-2 pr-2">
                             <select value={rule.move} onChange={(e) => {const n=[...editingTmRules]; n[idx].move=e.target.value; setEditingTmRules(n);}} className="w-full bg-[#0f172a] border border-slate-700 rounded p-1.5 text-slate-200 outline-none">
                               <option value="D">Direita (D)</option><option value="E">Esquerda (E)</option><option value="P">Parar (P)</option>
@@ -342,9 +362,21 @@ export default function TheoryOfComputationHub() {
                       {editingUtmRules.map((rule, idx) => (
                         <tr key={idx} className="hover:bg-slate-900/30">
                           <td className="py-2 pr-2"><input type="text" value={rule.fromS} onChange={(e) => {const n=[...editingUtmRules]; n[idx].fromS=e.target.value; setEditingUtmRules(n);}} className="w-full bg-[#0f172a] border border-slate-700 rounded p-1.5 text-slate-200 outline-none" /></td>
-                          <td className="py-2 pr-2"><input type="text" value={rule.read} onChange={(e) => {const n=[...editingUtmRules]; n[idx].read=e.target.value; setEditingUtmRules(n);}} className="w-16 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-blue-400 font-bold text-center outline-none" /></td>
+                          <td className="py-2 pr-2">
+                            <SymbolPickerInput 
+                              value={rule.read} 
+                              onChange={(val) => {const n=[...editingUtmRules]; n[idx].read=val; setEditingUtmRules(n);}} 
+                              className="w-16 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-blue-400 font-bold text-center outline-none" 
+                            />
+                          </td>
                           <td className="py-2 pr-2"><input type="text" value={rule.toS} onChange={(e) => {const n=[...editingUtmRules]; n[idx].toS=e.target.value; setEditingUtmRules(n);}} className="w-full bg-[#0f172a] border border-slate-700 rounded p-1.5 text-slate-200 outline-none" /></td>
-                          <td className="py-2 pr-2"><input type="text" value={rule.write} onChange={(e) => {const n=[...editingUtmRules]; n[idx].write} onChange={(e) => {const n=[...editingUtmRules]; n[idx].write=e.target.value; setEditingUtmRules(n);}} className="w-16 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-purple-400 font-bold text-center outline-none" /></td>
+                          <td className="py-2 pr-2">
+                            <SymbolPickerInput 
+                              value={rule.write} 
+                              onChange={(val) => {const n=[...editingUtmRules]; n[idx].write=val; setEditingUtmRules(n);}} 
+                              className="w-16 bg-[#0f172a] border border-slate-700 rounded p-1.5 text-purple-400 font-bold text-center outline-none" 
+                            />
+                          </td>
                           <td className="py-2 pr-2">
                             <select value={rule.move} onChange={(e) => {const n=[...editingUtmRules]; n[idx].move=e.target.value; setEditingUtmRules(n);}} className="w-full bg-[#0f172a] border border-slate-700 rounded p-1.5 text-slate-200 outline-none">
                               <option value="D">Direita (D)</option><option value="E">Esquerda (E)</option><option value="P">Parar (P)</option>

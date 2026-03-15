@@ -1,5 +1,6 @@
 import React from 'react';
 import { getBezierPath, EdgeLabelRenderer, BaseEdge } from '@xyflow/react';
+import SymbolPickerInput from '../SymbolPickerInput';
 
 export default function TransitionEdge({
   id,
@@ -23,9 +24,9 @@ export default function TransitionEdge({
     targetPosition,
   });
 
-  const onLabelChange = (evt) => {
+  const onLabelChange = (newVal) => {
     if (data.onLabelChange) {
-      data.onLabelChange(id, evt.target.value);
+      data.onLabelChange(id, newVal);
     }
   };
 
@@ -37,7 +38,7 @@ export default function TransitionEdge({
         style={{ 
           ...style, 
           strokeWidth: 2, 
-          stroke: selected ? '#3b82f6' : '#475569' 
+          stroke: selected ? '#facc15' : style.stroke || '#475569' 
         }} 
       />
       <EdgeLabelRenderer>
@@ -49,13 +50,13 @@ export default function TransitionEdge({
           }}
           className="nodrag nopan"
         >
-          <input
+          <SymbolPickerInput
             value={data.label}
             onChange={onLabelChange}
             className={`
-              w-10 h-6 bg-[#020617] border border-slate-700 rounded text-center text-xs font-mono font-bold transition-all
-              ${selected ? 'border-blue-500 text-blue-400' : 'text-slate-400'}
-              focus:outline-none focus:ring-1 focus:ring-blue-500
+              w-12 h-7 bg-[#020617] border border-slate-700 rounded text-center text-xs font-mono font-bold transition-all
+              ${selected ? 'border-yellow-500 text-yellow-400' : 'text-slate-400'}
+              focus:outline-none focus:ring-1 focus:ring-yellow-500
             `}
             placeholder="0,1"
           />
